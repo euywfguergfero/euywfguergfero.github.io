@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>流星弹幕（MeteorDanmaku）</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>流星弹幕（MeteorDanmaku）</h1>
+    <p class="tagline">一个简单的前端弹幕示例 — 支持实时发送、颜色/大小/速度/透明度控制与自动弹幕回放。</p>
+  </header>
+
+  <main class="main">
+    <section class="player-wrapper">
+      <div class="video-stage" id="videoStage">
+        <video id="video" controls crossorigin playsinline>
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+          你的浏览器不支持 video 标签。
+        </video>
+        <div id="danmakuLayer" class="danmaku-layer" aria-hidden="true"></div>
+      </div>
+
+      <div class="controls">
+        <input id="danmakuInput" type="text" placeholder="说点什么吧...（按回车发送）" maxlength="140">
+        <input id="colorInput" type="color" value="#ffffff" title="颜色">
+        <select id="sizeSelect" title="字号">
+          <option value="18">小</option>
+          <option value="22" selected>中</option>
+          <option value="28">大</option>
+          <option value="36">超大</option>
+        </select>
+        <label>速度 <input id="speedRange" type="range" min="0.5" max="3" step="0.1" value="1.4"></label>
+        <label>透明度 <input id="opacityRange" type="range" min="0.2" max="1" step="0.05" value="0.9"></label>
+        <button id="sendBtn">发送</button>
+        <button id="toggleDm">隐藏弹幕</button>
+        <button id="clearBtn">清空弹幕</button>
+      </div>
+
+      <details class="hint">
+        <summary>使用说明</summary>
+        <ol>
+          <li>点击播放视频后可看到自动回放的示例弹幕。</li>
+          <li>输入文字后按“发送”或回车即可发出弹幕。</li>
+          <li>可调整颜色、大小、速度与透明度。</li>
+        </ol>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>项目：流星弹幕 · 前端演示 · 由 Copilot 创建</small>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
