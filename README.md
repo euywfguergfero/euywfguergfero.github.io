@@ -1,14 +1,21 @@
-更新：将原来的站点移到 site.html，并增加了一个简单的客户端密码门禁（index.html）。
+# LevelForge Collective
 
-说明：
-- index.html 现在是一个极简的密码输入页，页面上仅显示一个密码框与确认按钮；通过校验后会跳转到 site.html。
-- site.html 是你原来的页面内容（弹幕播放器等）。
+LevelForge Collective is a community-driven Blender and Backrooms-inspired project archive for building and documenting endless, uncanny levels.
 
-注意（重要）：
-- 这是基于前端的静态保护，无法防止有心人直接查看仓库或抓取 site.html 的内容。若要真正的访问控制，需要后端鉴权或在服务器端做保护（例如用 Cloudflare Access、Netlify Identity 或标准服务器中间件）。
-- 我设置了一个简单的 MD5 校验（客户端），默认 HASH 是 md5("password")，请尽快修改 index.html 中的 PASSWORD_HASH 为你自己的密码的 MD5 值。
+## Purpose
+- Capture shared ideas for Backrooms-style levels
+- Build visual prototypes in Blender
+- Organize community-made level concepts and render notes
+- Publish a GitHub Pages site for browsing the archive
 
-如果你需要，我可以：
-- 为你把密码存放在更安全的地方（例如使用 Cloudflare Access 保护 GitHub Pages 站点或配置 Netlify/Cloudflare Workers 网关）；
-- 或把站点部署到有真正访问控制的托管服务上并实现后端鉴权；
-- 或把密码验证改为 Firebase Authentication / Supabase Auth 等方案。
+## Site overview
+- `index.html` — landing page for the project
+- `site.html` — level archive page
+- `styles.css` — site styling
+- `app.js` — reveal animation and UI interactions
+
+## GitHub Pages
+The site is published via GitHub Pages and includes a navigation button to the repository in the site header.
+
+## Community note
+This repository is designed as a static project archive and public-facing site. It is meant to feel like a curated community build log for fictional level design inspired by Backrooms lore.
