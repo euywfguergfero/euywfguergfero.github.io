@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>这一行字就是名字 | 伪词生成器</title>
+    <style>
+        :root {
+            --bg: #0f1115;
+            --panel: #1a1d24;
+            --border: #2a2e38;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --success: #10b981;
+            --link: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg) 70%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .header svg {
+            width: 32px;
+            height: 32px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text);
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: monospace;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            background: var(--border);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .length-val {
+            font-family: monospace;
+            font-size: 16px;
+            color: var(--accent);
+            width: 24px;
+            text-align: right;
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .result-box {
+            margin-top: 24px;
+            padding: 24px;
+            background: var(--bg);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-word {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text);
+            margin-bottom: 8px;
+            transition: opacity 0.2s;
+            padding-top: 10px;
+        }
+
+        .result-phonetic {
+            font-family: 'Times New Roman', Times, serif;
+            color: var(--text-dim);
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .phonetic-warning {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 11px;
+            color: #475569;
+            margin-top: 6px;
+            user-select: none;
+        }
+
+        .action-group {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .icon-btn svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+
+        .pool-info {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .pool-tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+        }
+
+        .pool-tag span {
+            color: var(--accent);
+        }
+
+        .author-card {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(26, 29, 36, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--text-dim);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        .author-card:hover {
+            border-color: var(--text-dim);
+        }
+
+        .author-card a {
+            color: var(--link);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .author-card a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-pop {
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @media (max-width: 480px) {
+            .author-card {
+                bottom: 16px;
+                right: 16px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <div>
+            <h1>这一行字就是名字</h1>
+            <p>一个被取名逼疯的神金用AI做的顺口伪词生成器</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="poolInput">1. 粘贴你的乱码字母池</label>
+        <textarea id="poolInput" placeholder="例如: hfgsailsdhfusagfsdbavcsdkcsdafjihfiohdfhsdaicbusidacs">hfgsailsdhfusagfsdbavcsdkcsdafjihfiohdfhsdaicbusidacs</textarea>
+    </div>
+
+    <div class="form-group">
+        <label>2. 选择目标长度</label>
+        <div class="slider-container">
+            <input type="range" id="lenSlider" min="3" max="12" value="6">
+            <span class="length-val" id="lenVal">6</span>
+        </div>
+    </div>
+
+    <button id="generateBtn" class="main-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        生成单词
+    </button>
+
+    <div class="result-box">
+        <div class="action-group">
+            <button class="icon-btn" id="copyBtn" title="复制">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </button>
+            <button class="icon-btn" id="searchBtn" title="在必应搜索此名称">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="result-word" id="resultWord">Ready</div>
+        <div class="result-phonetic" id="resultPhonetic">等待生成</div>
+        <div class="phonetic-warning">音标可能不标准，如果错了你自己想音标吧</div>
+    </div>
+
+    <div class="pool-info" id="poolInfo" style="display: none;">
+        <div class="pool-tag">元音池: <span id="vowels"></span></div>
+        <div class="pool-tag">辅音池: <span id="consonants"></span></div>
+    </div>
+</div>
+
+<div class="author-card">
+    作者：<a href="https://space.bilibili.com/3546895232272915" target="_blank" rel="noopener noreferrer">衔星火</a>
+</div>
+
+<script>
+    const poolInput = document.getElementById('poolInput');
+    const lenSlider = document.getElementById('lenSlider');
+    const lenVal = document.getElementById('lenVal');
+    const generateBtn = document.getElementById('generateBtn');
+    const resultWord = document.getElementById('resultWord');
+    const resultPhonetic = document.getElementById('resultPhonetic');
+    const copyBtn = document.getElementById('copyBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const poolInfo = document.getElementById('poolInfo');
+    const vowelsSpan = document.getElementById('vowels');
+    const consonantsSpan = document.getElementById('consonants');
+
+    const VOWELS = 'aeiouy';
+
+    lenSlider.addEventListener('input', (e) => {
+        lenVal.textContent = e.target.value;
+    });
+
+    function generateWord(pool, targetLength) {
+        const cleanPool = pool.toLowerCase().replace(/[^a-z]/g, '');
+        const vPool = cleanPool.split('').filter(c => VOWELS.includes(c));
+        const cPool = cleanPool.split('').filter(c => !VOWELS.includes(c));
+
+        poolInfo.style.display = 'flex';
+        vowelsSpan.textContent = vPool.length ? [...new Set(vPool)].join(', ') : '无';
+        consonantsSpan.textContent = cPool.length ? [...new Set(cPool)].join(', ') : '无';
+
+        const finalV = vPool.length > 0 ? vPool : ['a', 'o', 'e'];
+        const finalC = cPool.length > 0 ? cPool : ['s', 't', 'n', 'r'];
+
+        let word = '';
+        let isNextVowel = Math.random() > 0.7;
+
+        while (word.length < targetLength) {
+            if (isNextVowel) {
+                word += finalV[Math.floor(Math.random() * finalV.length)];
+            } else {
+                word += finalC[Math.floor(Math.random() * finalC.length)];
+                if (Math.random() > 0.8 && word.length < targetLength - 1) {
+                    word += finalC[Math.floor(Math.random() * finalC.length)];
+                }
+            }
+            isNextVowel = !isNextVowel;
+        }
+
+        let finalWord = word.slice(0, targetLength);
+        finalWord = finalWord.charAt(0).toUpperCase() + finalWord.slice(1);
+
+        return finalWord;
+    }
+
+    function generatePhonetic(word) {
+        let p = word.toLowerCase();
+
+        p = p.replace(/sh/g, 'ʃ')
+             .replace(/ch/g, 'tʃ')
+             .replace(/th/g, 'θ')
+             .replace(/ph/g, 'f')
+             .replace(/ck/g, 'k')
+             .replace(/ng/g, 'ŋ')
+             .replace(/qu/g, 'kw')
+             .replace(/x/g, 'ks');
+
+        p = p.replace(/a/g, 'æ')
+             .replace(/e/g, 'e')
+             .replace(/i/g, 'ɪ')
+             .replace(/o/g, 'ɒ')
+             .replace(/u/g, 'ʌ')
+             .replace(/y/g, 'ɪ');
+
+        if (p.endsWith('e')) {
+            p = p.slice(0, -1) + 'ə';
+        }
+
+        const vowels = /[æeɪɒʌə]/;
+        const idx = p.search(vowels);
+        if (idx >= 0) {
+            p = p.slice(0, idx) + 'ˈ' + p.slice(idx);
+        }
+
+        return `/${p}/`;
+    }
+
+    function render() {
+        const pool = poolInput.value;
+        const len = parseInt(lenSlider.value);
+
+        if (!pool.trim()) {
+            alert('请先输入字母池');
+            return;
+        }
+
+        const newWord = generateWord(pool, len);
+
+        resultWord.classList.remove('animate-pop');
+        void resultWord.offsetWidth;
+
+        resultWord.textContent = newWord;
+        resultWord.classList.add('animate-pop');
+
+        resultPhonetic.textContent = generatePhonetic(newWord);
+    }
+
+    generateBtn.addEventListener('click', render);
+
+    copyBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const text = resultWord.textContent;
+        if (text === 'Ready') return;
+
+        try {
+            await navigator.clipboard.writeText(text);
+            const originalSvg = copyBtn.innerHTML;
+            copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            setTimeout(() => {
+                copyBtn.innerHTML = originalSvg;
+            }, 1500);
+        } catch (err) {
+            alert('复制失败，请手动选择复制');
+        }
+    });
+
+    searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const text = resultWord.textContent;
+        if (text === 'Ready') return;
+
+        const searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(text)}`;
+        window.open(searchUrl, '_blank');
+    });
+
+    window.addEventListener('load', render);
+</script>
+</body>
+</html>
