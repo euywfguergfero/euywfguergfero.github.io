@@ -3,183 +3,354 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="LevelForge Collective — a Blender-based community archive of Backrooms-style levels and hallway architecture."
-    />
-    <title>LevelForge Collective</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <meta name="description" content="衔星火的没用小工具" />
+    <title>衔星火的没用小工具</title>
+    <style>
+      :root {
+        --bg: #07111f;
+        --bg-2: #101b2d;
+        --panel: rgba(16, 24, 37, 0.8);
+        --panel-strong: rgba(11, 18, 28, 0.96);
+        --border: rgba(148, 163, 184, 0.22);
+        --text: #e5eefb;
+        --muted: #9eb1c7;
+        --accent: #7dd3fc;
+        --accent-2: #8b5cf6;
+        --accent-3: #34d399;
+        --shadow: rgba(14, 32, 52, 0.6);
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top, rgba(125, 211, 252, 0.18), transparent 25%),
+          radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.12), transparent 30%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      }
+
+      a { color: inherit; text-decoration: none; }
+
+      .page {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 64px 0 80px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 34px;
+        padding: 16px 20px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgba(14, 20, 31, 0.7);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+      }
+
+      .brand {
+        font-size: 1.02rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: var(--accent);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .nav a {
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        color: var(--muted);
+        transition: all 0.2s ease;
+      }
+
+      .nav a:hover {
+        border-color: var(--border);
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.4fr 0.8fr;
+        gap: 24px;
+        align-items: stretch;
+        margin-bottom: 28px;
+      }
+
+      .hero-copy,
+      .hero-panel,
+      .tool-card {
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(17, 27, 39, 0.88), rgba(10, 17, 27, 0.96));
+        border-radius: 24px;
+        box-shadow: 0 24px 50px var(--shadow);
+      }
+
+      .hero-copy {
+        padding: 36px 32px;
+      }
+
+      .eyebrow {
+        margin: 0 0 18px;
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(125, 211, 252, 0.08);
+        border: 1px solid rgba(125, 211, 252, 0.18);
+        color: var(--accent);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 0 0 18px;
+        font-size: clamp(2.6rem, 4vw, 5rem);
+        line-height: 1.05;
+        letter-spacing: -0.06em;
+      }
+
+      .lead {
+        margin: 0;
+        max-width: 60ch;
+        color: var(--muted);
+        font-size: 1.06rem;
+        line-height: 1.9;
+      }
+
+      .hero-panel {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .mini-label {
+        color: var(--accent);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .status-box {
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+      }
+
+      .status-box strong {
+        display: block;
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+
+      .status-box span {
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .tool-section {
+        margin-top: 14px;
+      }
+
+      .section-title {
+        margin: 0 0 22px;
+        font-size: 1.2rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .tool-card {
+        position: relative;
+        overflow: hidden;
+        padding: 26px 20px 20px;
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      }
+
+      .tool-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(circle, rgba(125, 211, 252, 0.22), transparent 60%);
+        pointer-events: none;
+      }
+
+      .tool-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(125, 211, 252, 0.28);
+        box-shadow: 0 24px 42px rgba(17, 24, 39, 0.7);
+      }
+
+      .tool-card.featured {
+        background: linear-gradient(180deg, rgba(17, 27, 39, 0.94), rgba(25, 14, 39, 0.96));
+      }
+
+      .tool-icon {
+        width: 52px;
+        height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(125, 211, 252, 0.18), rgba(139, 92, 246, 0.18));
+        border: 1px solid rgba(125, 211, 252, 0.24);
+        font-size: 1.6rem;
+        margin-bottom: 18px;
+      }
+
+      .tool-card h2 {
+        margin: 0 0 10px;
+        font-size: 1.8rem;
+        letter-spacing: -0.04em;
+      }
+
+      .tool-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .tool-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        width: 100%;
+        padding: 13px 16px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--accent), #5eead4);
+        color: #08121d;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 10px 24px rgba(94, 234, 212, 0.2);
+      }
+
+      .tool-link:hover {
+        transform: translateY(-1px);
+      }
+
+      .tool-card.secondary .tool-link {
+        background: linear-gradient(135deg, rgba(148, 163, 184, 0.18), rgba(96, 165, 250, 0.18));
+        color: var(--text);
+        border: 1px solid var(--border);
+        box-shadow: none;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .tool-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .hero-copy {
+          padding: 24px 18px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <header class="topbar">
-      <div class="container nav-wrap">
-        <div class="brand">LevelForge Collective</div>
-        <nav class="nav">
-          <a href="#about">关于</a>
-          <a href="#archive">档案</a>
-          <a href="#workflow">流程</a>
-          <a href="#community">社区</a>
-          <a
-            class="repo-btn"
-            href="https://github.com/euywfguergfero/euywfguergfero.github.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            >查看仓库</a
-          >
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">衔星火</div>
+        <nav class="nav" aria-label="主导航">
+          <a href="/">首页</a>
+          <a href="/naming/">取名器</a>
         </nav>
-      </div>
-    </header>
+      </header>
 
-    <main>
-      <section class="hero">
-        <div class="container hero-grid">
-          <div class="hero-copy reveal">
-            <p class="eyebrow">Backrooms Wiki × Blender × Community Build</p>
-            <h1>构建无尽层级的协作空间</h1>
+      <main>
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow">Toolbox</div>
+            <h1>衔星火的没用小工具</h1>
             <p class="lead">
-              我们在这里收集、设计与分享各类“Backrooms 风格”的层级构筑，使用 Blender
-              搭建反常空间、重复走廊、失真光照和心理噩梦般的密闭环境。
+              这里集合了一些脑洞大开、功能不一定实用、但看起来很有气质的小玩意儿。
+              你可以随便点，看看它们能不能顺手解决一点点无聊。
             </p>
-            <div class="cta-row">
-              <a class="primary" href="/site.html">浏览层级档案</a>
-              <a class="secondary" href="https://github.com/euywfguergfero/euywfguergfero.github.io" target="_blank" rel="noopener noreferrer">GitHub Pages 仓库</a>
-            </div>
-            <ul class="stats">
-              <li><strong>3,000+</strong><span>构想层级</span></li>
-              <li><strong>12</strong><span>社区分组</span></li>
-              <li><strong>∞</strong><span>重复走廊</span></li>
-            </ul>
           </div>
 
-          <div class="hero-panel reveal">
-            <div class="panel-header">当前构想：Level 37</div>
-            <div class="level-card">
-              <div class="room-glow"></div>
-              <div class="room-lines"></div>
-              <div class="room-meta">
-                <span>湿润粉刷</span>
-                <span>低灯环境</span>
+          <aside class="hero-panel" aria-label="状态">
+            <div>
+              <div class="mini-label">当前状态</div>
+              <div class="status-box">
+                <strong>1</strong>
+                <span>已上线工具：取名器</span>
               </div>
             </div>
-            <p>
-              “所有门都在同一侧，所有走廊都以相同频率回响。你在里面时，总觉得前方的路正在重新写自己。”
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="about" class="section">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">关于项目</p>
-            <h2>一座由社区共同搭建的层级图书馆</h2>
-          </div>
-
-          <div class="info-grid">
-            <article class="info-card reveal">
-              <h3>概念</h3>
-              <p>
-                参考 Backrooms Wiki 中对“无限走廊、失控建筑、无尽复制空间”的描述，使用
-                Blender 构筑不断扩展的层级原型与视觉草案。
-              </p>
-            </article>
-            <article class="info-card reveal">
-              <h3>创作方式</h3>
-              <p>
-                每个层级包含构造思路、照明设计、材质布局、导航结构与气氛说明，鼓励社区以
-                模型、贴图、脚本和文档共同迭代。
-              </p>
-            </article>
-            <article class="info-card reveal">
-              <h3>目标</h3>
-              <p>
-                不只做一个“场景”，而是让每个层级都像一个危机感持续增长的空间：层级里有记忆，有回响，有重构。 
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="archive" class="section alt">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">层级档案</p>
-            <h2>精选工程</h2>
-          </div>
-
-          <div class="archive-grid">
-            <article class="level-item reveal">
-              <span class="badge">Level 0</span>
-              <h3>白色黄灯走廊</h3>
-              <p>极简起点：长走廊、无尽门、泛白墙、低频回声，适合对层级氛围做最原始的搭建实验。</p>
-            </article>
-            <article class="level-item reveal">
-              <span class="badge">Level 11</span>
-              <h3>超高天花板</h3>
-              <p>建筑的垂直维度被拉长，天花板不可见的空间让人觉得房间不是“开阔”，而是“持续吞没”。</p>
-            </article>
-            <article class="level-item reveal">
-              <span class="badge">Level 36</span>
-              <h3>管道迷宫</h3>
-              <p>日常机械结构被放大，管线与走廊在重复衍生中互相转译，形成空间执念。</p>
-            </article>
-            <article class="level-item reveal">
-              <span class="badge">Level 81</span>
-              <h3>镜像回廊</h3>
-              <p>镜面结构、重复门框与交错视线，构成一种“你可以走出去，但看起来完全不一样”的错乱感。</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="workflow" class="section">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">工作流</p>
-            <h2>从概念到模型</h2>
-          </div>
-
-          <div class="steps">
-            <div class="step reveal">
-              <span>01</span>
-              <h3>建立主题</h3>
-              <p>确定层级的氛围、结构逻辑和视觉问题：封闭、重复、错误、失真、压迫感。</p>
+            <div class="status-box">
+              <strong>∞</strong>
+              <span>杂念与灵感，但不保证有用。</span>
             </div>
-            <div class="step reveal">
-              <span>02</span>
-              <h3>布局空间</h3>
-              <p>在 Blender 中搭建走廊、门、支撑柱、天花板与路标，保留不稳定的几何感。</p>
-            </div>
-            <div class="step reveal">
-              <span>03</span>
-              <h3>渲染叙事</h3>
-              <p>调整光源、颜色、材质与景深，让空间不是“场景”，而是一个持续制造不安的场域。</p>
-            </div>
+          </aside>
+        </section>
+
+        <section class="tool-section" aria-label="工具选择">
+          <h2 class="section-title">工具选择</h2>
+          <div class="tool-grid">
+            <article class="tool-card featured">
+              <div class="tool-icon">✦</div>
+              <h2>取名器</h2>
+              <p>给你的乱码字母池喂进来，自动生成一个像“神金名”一样的伪词，顺便还写了音标和搜索入口。</p>
+              <a class="tool-link" href="/naming/">进入取名器</a>
+            </article>
+
+            <article class="tool-card secondary">
+              <div class="tool-icon">⚙️</div>
+              <h2>待开发</h2>
+              <p>这个位置留给未来的没用工具，预计会在有灵感的时候被填满，或永远留空，谁知道呢。</p>
+              <a class="tool-link" href="/" aria-disabled="true">敬请期待</a>
+            </article>
+
+            <article class="tool-card secondary">
+              <div class="tool-icon">☕</div>
+              <h2>小打发</h2>
+              <p>一个可以让你拖延一会儿的页面，适合在写代码、发呆和想要换个环境时使用。</p>
+              <a class="tool-link" href="/" aria-disabled="true">点进来看看</a>
+            </article>
           </div>
-        </div>
-      </section>
-
-      <section id="community" class="section alt">
-        <div class="container narrow reveal">
-          <p class="eyebrow">社区协作</p>
-          <h2>每一条走廊都可能被未来的成员重新建造</h2>
-          <p>
-            LevelForge Collective 欢迎更多建模者、概念设计者、摄影师和页面维护者加入。我们以
-            开放贡献、共享资源与迭代反馈为核心，让每个层级都能从一次灵感孕育成可体验的空间。
-          </p>
-          <a class="primary" href="https://github.com/euywfguergfero/euywfguergfero.github.io" target="_blank" rel="noopener noreferrer">前往 GitHub 仓库</a>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="container footer-inner">
-        <p>© 2026 LevelForge Collective</p>
-        <a href="https://github.com/euywfguergfero/euywfguergfero.github.io" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-      </div>
-    </footer>
-
-    <script src="/app.js"></script>
+        </section>
+      </main>
+    </div>
   </body>
 </html>
-
